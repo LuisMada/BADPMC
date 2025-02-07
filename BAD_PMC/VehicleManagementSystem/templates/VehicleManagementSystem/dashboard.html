@@ -1,24 +1,129 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <style>
-        body {
-            background-color: #f8f9fa;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-    </style>
-</head>
-<body>
-    <div class="text-center">
-        <h1>Welcome to Your Dashboard</h1>
-        <p class="text-muted">Access your features based on your role.</p>
-    </div>
-</body>
-</html>
+{% extends "VehicleManagementSystem/base.html" %}
+{% load static %}
+
+{% block title %}Dashboard | {% endblock %}
+
+{% block extra_styles %}
+    <link rel="stylesheet" href="{% static 'myapp/css/dashboard.css' %}" />
+{% endblock %}
+
+{% block content %}
+    {% if request.user.is_authenticated %}
+        <div class="mt-4">
+            <h2 class="fw-bold">Welcome, {{ request.user.firstname }}</h2>
+
+            {% if request.user.role != "driver" %}
+            <div class="d-flex mt-4 action-buttons">
+
+                {% if request.user.role == "management" %}
+
+                <div class="action-button-container text-center">
+                    <button class="btn btn-light shadow p-4 btn-blue action-button">
+                        <i class="bi bi-file-earmark-text fs-1"></i>
+                    </button>
+                    <p class="mt-2 action-button-text">View Reports</p>
+                </div>
+                <div class="action-button-container text-center">
+                    <button class="btn btn-light shadow p-4 btn-blue action-button">
+                        <i class="bi bi-pencil fs-1"></i>
+                    </button>
+                    <p class="mt-2 action-button-text">Create Damage Report</p>
+                </div>
+                <div class="action-button-container text-center">
+                    <button class="btn btn-light shadow p-4 btn-blue action-button">
+                        <i class="bi bi-car-front fs-1"></i>
+                    </button>
+                    <p class="mt-2 action-button-text">Manage Vehicles</p>
+                </div>
+
+                {% elif request.user.role == "warehouse_staff" %}
+
+                <div class="action-button-container text-center">
+                    <button class="btn btn-light shadow p-4 btn-blue action-button">
+                        <i class="bi bi-file-earmark-plus fs-1"></i>
+                    </button>
+                    <p class="mt-2 action-button-text">Create New Report</p>
+                </div>
+                <div class="action-button-container text-center">
+                    <button class="btn btn-light shadow p-4 btn-blue action-button">
+                        <i class="bi bi-file-earmark-text fs-1"></i>
+                    </button>
+                    <p class="mt-2 action-button-text">Edit Existing Report</p>
+                </div>
+
+                {% endif %}
+            </div>
+            {% endif %}
+
+            <!-- Vehicle Availability Section -->
+            <div class="mt-5 vehicle-availability">
+                <div class="header d-flex">
+                    <h4 class="fw-bold d-inline">Vehicle Availability</h4>
+                    <i class="bi bi-funnel-fill ms-2"></i> <!-- Filter icon -->
+                </div>
+
+                <div class="vehicles">
+                    <div class="row mt-3">
+                        {% for vehicle in sample_vehicles %}
+
+                        <div class="col-md-4 mb-4">
+
+                            <div class="card shadow vehicle-card">
+                                <div class="card-header bg-dark text-white d-flex flex-column">
+                                    <div>
+                                        <span style="font-size: 11px; font-weight: 500;">Plate Number</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span class="fw-bold" style="font-size: 32px; font-weight: 900;">{{ vehicle.plate_number }}</span>
+
+                                        <div class="d-flex align-items-center">
+                                            <span class="badge d-flex align-items-center
+                                                {% if vehicle.status == 'Operational' %} bg-success
+                                                {% elif vehicle.status == 'In Repair' %} bg-warning
+                                                {% else %} bg-danger {% endif %}">
+                                                {{ vehicle.status }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3" style="font-size: 14px; font-weight: 500;">Vehicle Make and Model</div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <img src="{{ vehicle.image }}" class="img-fluid rounded">
+                                        </div>
+
+                                        <div class="col-md-8">
+                                            <div class="mt-2"><strong>Date of Last Maintenance:</strong> {{ vehicle.last_maintenance }}</div>
+                                            <div class="mt-4"><strong>Previous Vehicular Damages:</strong></div>
+                                            <ul>
+                                                {% for damage in vehicle.damages %}
+                                                    <li>{{ damage }}</li>
+                                                {% empty %}
+                                                    <li>No recorded damages</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        {% empty %}
+
+                        <p class="text-muted">No vehicles available.</p>
+
+                        {% endfor %}
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    {% else %}
+        <div class="text-center mt-5">
+            <p>Please log in to continue.</p>
+        </div>
+    {% endif %}
+{% endblock %}
