@@ -13,7 +13,7 @@
 
     {% block extra_styles %}{% endblock %}
 </head>
-<body>
+<body style="height: 100vh;">
     <nav class="navbar navbar-dark pmc-navbar px-3">
         <a class="navbar-brand" href="#">PMC</a>
 
@@ -25,7 +25,7 @@
     </nav>
 
     <!-- Main Content -->
-    <div class="container-fluid mt-4" style="padding: 0 20px;">
+    <div class="container-fluid mt-4" style="padding: 0 20px;height: calc(100% - 80px);">
         {% block content %}{% endblock %}
     </div>
 

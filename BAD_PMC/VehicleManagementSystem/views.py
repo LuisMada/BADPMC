@@ -43,13 +43,13 @@ def register_view(request):
     return render(request, "VehicleManagementSystem/register.html", {"form": form})
 
 
-@login_required
-def driver_dashboard(request):
-    return render(request, "VehicleManagementSystem/driver_dashboard.html")
+# @login_required
+# def driver_dashboard(request):
+    # return render(request, "VehicleManagementSystem/driver_dashboard.html")
 
-@login_required
-def management_dashboard(request):
-    return render(request, "VehicleManagementSystem/management_dashboard.html")
+# @login_required
+# def management_dashboard(request):
+    # return render(request, "VehicleManagementSystem/management_dashboard.html")
 
 @login_required
 def dashboard(request):
@@ -105,3 +105,13 @@ def dashboard(request):
     ]
 
     return render(request, "VehicleManagementSystem/dashboard.html", {"sample_vehicles": sample_vehicles})
+
+
+@login_required
+def create_report(request):
+    # if request.method == "POST":
+    #     vehicle = request.POST["vehicle"]
+    #     report = request.POST["report"]
+    #     messages.success(request, f"Report for vehicle {vehicle} created successfully.")
+    #     return redirect("dashboard")
+    return render(request, "VehicleManagementSystem/create_report.html")

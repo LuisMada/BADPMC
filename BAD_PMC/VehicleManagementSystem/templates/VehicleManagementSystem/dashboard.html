@@ -39,10 +39,11 @@
                 {% elif request.user.role == "warehouse_staff" %}
 
                 <div class="action-button-container text-center">
-                    <button class="btn btn-light shadow p-4 btn-blue action-button">
+                    <a href="{% url 'create_report' %}" class="btn btn-light shadow p-4 btn-blue action-button">
                         <i class="bi bi-file-earmark-plus fs-1"></i>
-                    </button>
+                    </a>
                     <p class="mt-2 action-button-text">Create New Report</p>
+                    
                 </div>
                 <div class="action-button-container text-center">
                     <button class="btn btn-light shadow p-4 btn-blue action-button">

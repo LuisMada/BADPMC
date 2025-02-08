@@ -1,0 +1,218 @@
+{% extends "VehicleManagementSystem/base.html" %}
+{% load static %}
+
+{% block title %}Trip Form | {% endblock %}
+
+{% block extra_styles %}
+<!-- <link rel="stylesheet" href="{% static 'myapp/css/trip_form.css' %}" /> -->
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+    .form-container {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+        margin: auto;
+    }
+    .btn-blue {
+        background-color: #1f357d;
+        color: white;
+        border-radius: 6px;
+        padding: 10px 20px;
+        font-weight: bold;
+    }
+    .btn-blue:hover {
+        background-color: #162b63;
+    }
+    .hidden {
+        display: none;
+    }
+    .table-wrapper {
+        border-radius: 10px;
+        overflow: hidden;
+        border-bottom: 15px solid #394B85;
+    }
+    .inspection-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 10px;
+        overflow: hidden; 
+        border-bottom: 15px solid #394B85;
+    }
+    .inspection-table th {
+        background-color: #1f357d;
+        color: white;
+        padding: 10px;
+        text-align: left;
+    }
+    .inspection-table td {
+        padding: 4px;
+        /* border-bottom: 1px solid #ddd; */
+    }
+    .inspection-table .part {
+        font-size: 21px;font-weight: 500;
+    }
+
+    .comment-field {
+        border-color: #394B85;
+        border-radius: 10px;
+    }
+    .page-button {
+        width: 230px; height: 45px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4" style="height: 100%">
+    <!-- Trip Form (Step 1) -->
+    <div id="tripForm" class="d-flex flex-column justify-content-around" style="height: 100%;">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <h3 class="fw-bold">1 Basic Information</h3>
+                <div class="form-container mt-4">
+                    <form id="tripFormElement">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <h5 class="fw-bold">Employee Details</h5>
+                            <input type="text" class="form-control" value="Jose Rizal" readonly>
+                            <input type="text" class="form-control mt-2" value="123456" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <h5 class="fw-bold">Trip Details</h5>
+                            <select class="form-control">
+                                <option>Select Vehicle</option>
+                            </select>
+                            <input type="text" class="form-control mt-2" placeholder="Assigned Driver" readonly>
+                            <input type="date" class="form-control mt-2">
+                        </div>
+                       
+                    </form>
+                </div>
+                
+            </div>
+        </div>
+        <div class="row">
+            <div class="d-flex justify-content-between mt-4">
+                <a href="{% url 'dashboard' %}" class="btn btn-dark page-button">Cancel</a>
+                <button type="button" class="btn btn-blue page-button" onclick="showPreDelivery()">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pre-Delivery Inspection (Step 2) -->
+    <div id="preDeliveryForm" class="hidden flex-column justify-content-around" style="height: 100%;">
+        <div class="row">
+            <h3 class="fw-bold">2 Pre-Delivery Inspection</h3>
+                <p>Mitsubishi - L300 2018</p>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="table-wrapper">
+                    <table class="inspection-table">
+                        <thead>
+                            <tr>
+                                <th>Vehicle Component</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td class="part">Battery</td><td><select class="form-control"><option>OK</option><option>Needs Repair</option></select></td></tr>
+                            <tr><td class="part">Lights</td><td><select class="form-control"><option>OK</option><option>Needs Repair</option></select></td></tr>
+                            <tr><td class="part">Oil</td><td><select class="form-control"><option>OK</option><option>Needs Repair</option></select></td></tr>
+                            <tr><td class="part">Water</td><td><select class="form-control"><option>OK</option><option>Needs Repair</option></select></td></tr>
+                            <tr><td class="part">Brakes</td><td><select class="form-control"><option>OK</option><option>Needs Repair</option></select></td></tr>
+                            <tr><td class="part">Air</td><td><select class="form-control"><option>OK</option><option>Needs Repair</option></select></td></tr>
+                            <tr><td class="part">Gas</td><td><select class="form-control"><option>OK</option><option>Needs Repair</option></select></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+               
+            </div>
+            <div class="col-md-6">
+                <textarea class="form-control mt-3 comment-field" placeholder="Enter comment here..."></textarea>
+                <textarea class="form-control mt-3 comment-field" placeholder="Enter damages incurred here..."></textarea>
+            </div>
+        </div>
+        <div class="d-flex justify-content-between mt-4">
+            <button type="button" class="btn btn-dark page-button" onclick="showTripForm()">Back</button>
+            <button type="button" class="btn btn-blue page-button" onclick="showPostDelivery()">Next</button>
+        </div>
+    </div>
+
+    <div id="postDeliveryForm" class="hidden flex-column justify-content-around" style="height: 100%;">
+        <div class="row">
+            <h3 class="fw-bold">2 Post-Delivery Inspection</h3>
+                <p>Mitsubishi - L300 2018</p>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="table-wrapper">
+                    <table class="inspection-table">
+                        <thead>
+                            <tr>
+                                <th>Vehicle Component</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td class="part">Battery</td><td><select class="form-control"><option>OK</option><option>Needs Repair</option></select></td></tr>
+                            <tr><td class="part">Lights</td><td><select class="form-control"><option>OK</option><option>Needs Repair</option></select></td></tr>
+                            <tr><td class="part">Oil</td><td><select class="form-control"><option>OK</option><option>Needs Repair</option></select></td></tr>
+                            <tr><td class="part">Water</td><td><select class="form-control"><option>OK</option><option>Needs Repair</option></select></td></tr>
+                            <tr><td class="part">Brakes</td><td><select class="form-control"><option>OK</option><option>Needs Repair</option></select></td></tr>
+                            <tr><td class="part">Air</td><td><select class="form-control"><option>OK</option><option>Needs Repair</option></select></td></tr>
+                            <tr><td class="part">Gas</td><td><select class="form-control"><option>OK</option><option>Needs Repair</option></select></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+            </div>
+            <div class="col-md-6">
+                <textarea class="form-control mt-3 comment-field" placeholder="Enter comment here..."></textarea>
+                <textarea class="form-control mt-3 comment-field" placeholder="Enter damages incurred here..."></textarea>
+            </div>
+        </div>
+        <div class="d-flex justify-content-between mt-4">
+            <button type="button" class="btn btn-dark page-button" onclick="showPreDelivery()">Back</button>
+            <button type="submit" class="btn btn-blue page-button">Finish</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showPreDelivery() {
+        document.getElementById("tripForm").classList.add("hidden");
+        document.getElementById("tripForm").classList.remove("d-flex");
+
+        document.getElementById("preDeliveryForm").classList.remove("hidden");
+        document.getElementById("preDeliveryForm").classList.add("d-flex");
+
+        document.getElementById("postDeliveryForm").classList.add("hidden");
+        document.getElementById("postDeliveryForm").classList.remove("d-flex");
+    }
+
+    function showPostDelivery() {
+        document.getElementById("preDeliveryForm").classList.add("hidden");
+        document.getElementById("preDeliveryForm").classList.remove("d-flex");
+
+        document.getElementById("postDeliveryForm").classList.remove("hidden");
+        document.getElementById("postDeliveryForm").classList.add("d-flex");
+    }
+
+    function showTripForm() {
+        document.getElementById("tripForm").classList.remove("hidden");
+        document.getElementById("tripForm").classList.add("d-flex");
+
+        document.getElementById("preDeliveryForm").classList.add("hidden");
+        document.getElementById("preDeliveryForm").classList.remove("d-flex");
+
+        document.getElementById("postDeliveryForm").classList.add("hidden");
+        document.getElementById("postDeliveryForm").classList.remove("d-flex");
+    }
+</script>
+{% endblock %}
